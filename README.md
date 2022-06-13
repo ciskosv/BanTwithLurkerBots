@@ -5,7 +5,7 @@ Action to be added to your Streamer.bot.
 
 **Warning: make sure to read "How to setup" section and you have your whitelist file with the list of the bots you already use (just like streamelements, soundalerts, nightbot, etc.) as it may ban them**.
 
-**Be advised that some messages are sent to the chat in order to let you know about the proccess, these messages have been hardcoded in spanish but ban be translated or disabled if you need, you just need to look for the lines starting with CPH.SendMessage, if you want to disable you just add "//" at the beggining of line, or translate the message**
+**Be advised that some messages are sent to the chat in order to let you know about the proccess, these messages have been hardcoded in spanish but can be translated or disabled if you need, you just need to look for the lines starting with CPH.SendMessage, if you want to disable you just add "//" at the beggining of line, or translate the message**
 i.e.
 
 //TRANSLATE THE FOLLOWING MESSAGE
