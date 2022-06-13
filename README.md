@@ -5,6 +5,25 @@ Action to be added to your Streamer.bot.
 
 **Warning: make sure to read "How to setup" section and you have your whitelist file with the list of the bots you already use (just like streamelements, soundalerts, nightbot, etc.) as it may ban them**.
 
+**Be advised that some messages are sent to the chat in order to let you know about the proccess, these messages have been hardcoded in spanish but ban be translated or disabled if you need, you just need to look for the lines starting with CPH.SendMessage, if you want to disable you just add "//" at the beggining of line, or translate the message**
+i.e.
+
+//TRANSLATE THE FOLLOWING MESSAGE
+
+//TO INDICATE THAT THE CLEANING PROCESS HAS BEEN FINISHED AND THE TOTAL BOTS {baneados} WHERE BANNED
+
+CPH.SendMessage($"Listo, un total de {baneados} bots/lurkers fueron funados correctamente", false); 
+    
+
+if you want to disable it:
+
+//CPH.SendMessage($"Listo, un total de {baneados} bots/lurkers fueron funados correctamente", false); 
+
+if you want to translate it:
+
+//CPH.SendMessage($"Ok, a total of {baneados} bots/lurkers were banned correctly", false); 
+
+
 ## What does it do?
 - First it gets your list of viewers from https://tmi.twitch.tv/group/user/change-for-your-twitch-username/chatters
 - Gets your whitelist file stated on the argument called %WhiteListBot%
