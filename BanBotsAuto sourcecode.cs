@@ -40,7 +40,8 @@ public class CPHInline
     {
 		Usuarios usuarios;
 		Robots robots;
-
+	    	//TRANSLATE THE FOLLOWING MESSAGE
+		// TO INDICATE THAT THE ACTION IS SCANING
 		CPH.SendMessage($"Ejecutando limpieza de bots lurkers, dame unos momentos...", false); 
 
 		// OBTENER INFORMACION DE USUARIOS EN EL CHAT POR MEDIO DE LA API 
@@ -114,6 +115,8 @@ public class CPHInline
 		int abanear = usuariosBots2bBanned.Count;
 		if(abanear>0)
 		{
+			//TRANSLATE THE FOLLOWING MESSAGE
+			//TO INDICATE THAT SOME BOTS WHERE FOUND AND ARE GOING TO BE BANNED
 			CPH.SendMessage($"Encontramos {abanear} bots/lurkers en la lista de ban y vamos a proceder a funarlos!", false); 
 			//BANEAMOS A LOS BOTS
 			int baneados = 0;
@@ -121,16 +124,22 @@ public class CPHInline
 			{
 					baneados++;
 					CPH.LogInfo($"Ban List Contains: {b}"); 
+					//TRANSLATE THE FOLLOWING MESSAGE
+					//TO INDICATE THE REASON OF BANNING
 					CPH.SendMessage($"/ban {b} Suspected Bot", false); // bans user with reason of "Suspected Bot" and will use broadcaster account
 					CPH.Wait(8000); // TIEMPO PARA QUE EJECUTE LA ANIMACION DE BAN
 			}
 			if(baneados>0)
 			{
+				//TRANSLATE THE FOLLOWING MESSAGE
+				//TO INDICATE THAT THE CLEANING PROCESS HAS BEEN FINISHED AND THE TOTAL BOTS {baneados} WHERE BANNED
 				CPH.SendMessage($"Listo, un total de {baneados} bots/lurkers fueron funados correctamente", false); 
 			}
 		}
 		else
 		{
+			//TRANSLATE THE FOLLOWING MESSAGE
+			//TO INDICATE THAT NO BOTS WHERE FOUND
 			CPH.SendMessage($"No se encontraron bots/lurkers para banear, muy bien!!!", false); 
 		}
 		
