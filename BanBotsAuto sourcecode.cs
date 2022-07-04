@@ -40,7 +40,9 @@ public class CPHInline
     {
 		Usuarios usuarios;
 		Robots robots;
-	    	//TRANSLATE THE FOLLOWING MESSAGE
+		int delay = Convert.ToInt32(args["delay"]);
+	    	
+		//TRANSLATE THE FOLLOWING MESSAGE
 		// TO INDICATE THAT THE ACTION IS SCANING
 		CPH.SendMessage($"Ejecutando limpieza de bots lurkers, dame unos momentos...", false); 
 
@@ -56,12 +58,7 @@ public class CPHInline
 		{
 			usuariosChat.Add(u);
 		}
-		//AGREGAR A LA LISTA LOS USUARIOS CALIFICADOS COMO MODERADORES
-		//foreach(string u in usuarios.chatters.moderators)
-		//{
-		//	usuariosChat.Add(u);;
-		//}
-        
+
 		//CREAMOS LA LISTA DE BOTS, USANDO LA API DE TWITCHINSIGHTS.NET PARA VER LOS BOTS ACTUALMENTE ONLINE
 		string ListaBots = args["ListaBots"].ToString();
 		robots = JsonConvert.DeserializeObject<Robots>(ListaBots);
@@ -76,7 +73,6 @@ public class CPHInline
 
 
         //CREAMOS WHITE LIST DE BOTS
-        //var botsFile = @"D:\Documentos\personal\STREAM OBS ASSETS\StreamerBot\CiskoSV-Assets\SafeBots.txt";
 		string botsWLfile = args["WhiteListBot"].ToString();
 
 		//CREAMOS LA LISTA DE BOTS, OBTENIENDO NOMBRES DEL ARCHIVO DE TEXTO
@@ -127,7 +123,7 @@ public class CPHInline
 					//TRANSLATE THE FOLLOWING MESSAGE
 					//TO INDICATE THE REASON OF BANNING
 					CPH.SendMessage($"/ban {b} Suspected Bot", false); // bans user with reason of "Suspected Bot" and will use broadcaster account
-					CPH.Wait(8000); // TIEMPO PARA QUE EJECUTE LA ANIMACION DE BAN
+					CPH.Wait(delay); // TIEMPO PARA QUE EJECUTE LA ANIMACION DE BAN
 			}
 			if(baneados>0)
 			{
