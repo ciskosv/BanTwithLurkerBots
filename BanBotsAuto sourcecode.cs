@@ -4,33 +4,11 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
 
-    public class Links
-    {
-    }
-
-    public class Chatters
-    {
-        public List<string> broadcaster { get; set; }
-        public List<object> vips { get; set; }
-        public List<string> moderators { get; set; }
-        public List<object> staff { get; set; }
-        public List<object> admins { get; set; }
-        public List<object> global_mods { get; set; }
-        public List<string> viewers { get; set; }
-    }
-
-    public class Usuarios
-    {
-        public Links _links { get; set; }
-        public int chatter_count { get; set; }
-        public Chatters chatters { get; set; }
-    }
-
-    public class Robots
-    {
-        public List<List<object>> bots { get; set; }
-        public int _total { get; set; }
-    }
+public class Robots
+{
+    public List<List<object>> bots { get; set; }
+    public int _total { get; set; }
+}
 
 	
 public class CPHInline
@@ -38,33 +16,31 @@ public class CPHInline
 
     public bool Execute()
     {
-		Usuarios usuarios;
+		//Usuarios usuarios;
 		Robots robots;
-		int delay = Convert.ToInt32(args["delay"]);
-	    	
-		//TRANSLATE THE FOLLOWING MESSAGE
-		// TO INDICATE THAT THE ACTION IS SCANING
-		CPH.SendMessage($"Ejecutando limpieza de bots lurkers, dame unos momentos...", false); 
-
-		// OBTENER INFORMACION DE USUARIOS EN EL CHAT POR MEDIO DE LA API 
-		// https://tmi.twitch.tv/group/user/ciskosv/chatters
-		string chattersInfo = args["chattersInfo"].ToString();
-		usuarios = JsonConvert.DeserializeObject<Usuarios>(chattersInfo);
 		
-		//CREAMOS LISTA
-		List<string> usuariosChat = new List<string>();
-		//AGREGAR A LA LISTA LOS USUARIOS SOLO CALIFICADOS COMO VIEWER
-		foreach(string u in usuarios.chatters.viewers)
-		{
-			usuariosChat.Add(u);
-		}
-
+		//LEEMOS LAS VARIABLES
+		int delay_time = Convert.ToInt16(args["delay_time"]);
+		string botsWLfile = args["WhiteListBot"].ToString();
+		string start_txt = args["start"].ToString();
+		string found_txt = args["found"].ToString();
+		string not_found_txt = args["not_found"].ToString();
+		string reason_txt = args["reason"].ToString();
+		string end_txt = args["end"].ToString();
+		
+		//START
+		CPH.SendMessage(start_txt, false); 
+		
+		//OBTENEMOS LISTADO DE VIEWERS DE NUESTRO CANAL
+        List<string> usuariosChat = CPH.GetGlobalVar<List<string>>("presentViewers", true);
+		      
 		//CREAMOS LA LISTA DE BOTS, USANDO LA API DE TWITCHINSIGHTS.NET PARA VER LOS BOTS ACTUALMENTE ONLINE
 		string ListaBots = args["ListaBots"].ToString();
 		robots = JsonConvert.DeserializeObject<Robots>(ListaBots);
 		
 		//CREAMOS LISTA
 		List<string> usuariosBots = new List<string>();
+		
 		//AGREGAR A LA LISTA LOS USUARIOS SOLO CALIFICADOS COMO VIEWER
 		foreach(List<object> robot in robots.bots)
 		{
@@ -73,8 +49,6 @@ public class CPHInline
 
 
         //CREAMOS WHITE LIST DE BOTS
-		string botsWLfile = args["WhiteListBot"].ToString();
-
 		//CREAMOS LA LISTA DE BOTS, OBTENIENDO NOMBRES DEL ARCHIVO DE TEXTO
 		List<string> botsWL = new List<string>();
 
@@ -108,35 +82,33 @@ public class CPHInline
 				}
 			}
 		}
+		
 		int abanear = usuariosBots2bBanned.Count;
+		
+		String bots_encontrados_txt = found_txt.Replace("%abanear%", abanear.ToString());
+		
 		if(abanear>0)
 		{
-			//TRANSLATE THE FOLLOWING MESSAGE
-			//TO INDICATE THAT SOME BOTS WHERE FOUND AND ARE GOING TO BE BANNED
-			CPH.SendMessage($"Encontramos {abanear} bots/lurkers en la lista de ban y vamos a proceder a funarlos!", false); 
+			CPH.SendMessage(bots_encontrados_txt, false); 
 			//BANEAMOS A LOS BOTS
 			int baneados = 0;
 			foreach (string b in usuariosBots2bBanned)
 			{
 					baneados++;
 					CPH.LogInfo($"Ban List Contains: {b}"); 
-					//TRANSLATE THE FOLLOWING MESSAGE
-					//TO INDICATE THE REASON OF BANNING
-					CPH.SendMessage($"/ban {b} Suspected Bot", false); // bans user with reason of "Suspected Bot" and will use broadcaster account
-					CPH.Wait(delay); // TIEMPO PARA QUE EJECUTE LA ANIMACION DE BAN
+					CPH.TwitchBanUser(b, reason_txt, false);
+					CPH.Wait(delay_time); // TIEMPO PARA QUE EJECUTE LA ANIMACION DE BAN
 			}
+			
 			if(baneados>0)
 			{
-				//TRANSLATE THE FOLLOWING MESSAGE
-				//TO INDICATE THAT THE CLEANING PROCESS HAS BEEN FINISHED AND THE TOTAL BOTS {baneados} WHERE BANNED
-				CPH.SendMessage($"Listo, un total de {baneados} bots/lurkers fueron funados correctamente", false); 
+				String bots_end_txt = end_txt.Replace("%baneados%", baneados.ToString());
+				CPH.SendMessage(bots_end_txt, false); 
 			}
 		}
 		else
 		{
-			//TRANSLATE THE FOLLOWING MESSAGE
-			//TO INDICATE THAT NO BOTS WHERE FOUND
-			CPH.SendMessage($"No se encontraron bots/lurkers para banear, muy bien!!!", false); 
+			CPH.SendMessage(not_found_txt, false); 
 		}
 		
 
